@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+VERSION=`grep 'Version:' _oasis | sed 's/Version: *//'`
+NAME=`grep 'Name:' _oasis | sed 's/Name: *//'`
+DEV_REPO=`grep 'homepage:' opam | sed 's/homepage: *//' | xargs`
+ARCHIVE="$DEV_REPO/archive/${VERSION}.tar.gz"
+
+# release:
+git tag -a $(VERSION) -m "Version $(VERSION)."
+git push upstream $(VERSION)
+
+# publish
+opam publish prepare ${NAME}.${VERSION} ${ARCHIVE}
+OPAMPUBLISHBYPASSCHECKS=1 OPAMYES=1 opam publish submit ${NAME}.${VERSION}

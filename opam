@@ -1,0 +1,7 @@
+opam-version: "1.2"
+maintainer:   "thomas@gazagnaire.org"
+authors:      "Thomas Gazagnaire"
+license:      "ISC"
+homepage:     "https://github.com/samoht/opam-release"
+bug-reports:  "https://github.com/samoht/opam-release/issues"
+dev-repo:     "https://github.com/samoht/opam-release.git"
