@@ -10,5 +10,9 @@ git tag -a $(VERSION) -m "Version $(VERSION)."
 git push upstream $(VERSION)
 
 # publish
-opam publish prepare ${NAME}.${VERSION} ${ARCHIVE}
-OPAMPUBLISHBYPASSCHECKS=1 OPAMYES=1 opam publish submit ${NAME}.${VERSION}
+case "$PUBLISH" in
+    "")
+	opam publish prepare ${NAME}.${VERSION} ${ARCHIVE}
+	OPAMPUBLISHBYPASSCHECKS=1 OPAMYES=1 opam publish submit ${NAME}.${VERSION}
+	;;
+esac
