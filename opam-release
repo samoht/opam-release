@@ -1,17 +1,61 @@
 #!/usr/bin/env sh
 
-VERSION=`grep 'Version:' _oasis | sed 's/Version: *//'`
-NAME=`grep 'Name:' _oasis | sed 's/Name: *//'`
-DEV_REPO=`grep 'homepage:' opam | sed 's/homepage: *//' | xargs`
+OASIS_VERSION=`grep 'Version:' _oasis 2>/dev/null | sed 's/Version: *//'`
+OASIS_NAME=`grep 'Name:' _oasis 2>/dev/null | sed 's/Name: *//'`
+
+OPAM_NAME=`grep 'name:' opam 2>/dev/null | sed 's/name: *//'`
+OPAM_VERSION=`grep 'version:' opam 2>/dev/null | sed 's/version: *//'`
+OPAM_DEV_REPO=`grep 'homepage:' opam 2>/dev/null | sed 's/homepage: *//'`
+
 ARCHIVE="$DEV_REPO/archive/${VERSION}.tar.gz"
 
+# NAME
+case "x$NAME" in
+    x)
+	case "x$OPAM_NAME" in
+	    x)
+		case "x$OASIS_NAME" in
+		    x) echo "Unknown package name, set NAME manually."; exit 1 ;;
+		    *) NAME="$OASIS_NAME" ;;
+		esac
+		;;
+	    *) NAME="$OPAM_NAME" ;;
+	esac
+	;;
+esac
+
+# VERSION
+case "x$VERSION" in
+    x)
+	case "x$OPAM_VERSION" in
+	    x)
+		case "x$OASIS_VERSION" in
+		    x) echo "Unknown package version, set VERSION manually."; exit 1 ;;
+		    *) NAME="$OASIS_VERSION" ;;
+		esac
+		;;
+	    *) NAME="$OPAM_VERSION" ;;
+	esac
+	;;
+esac
+
+# DEV_REPO
+
+case "$xDEV_REPO" in
+    x)
+	case "$xOPAM_DEV_REPO" in
+	    x) echo "Unknown dev-repo. Please set DEV_REPO." exit 1 ;;
+	    *) DEV_REPO="$DEV_REPO"
+	esac
+	;;
+esac
+
 # release:
-git tag -a $(VERSION) -m "Version $(VERSION)."
-git push upstream $(VERSION)
+git tag -a ${VERSION} -m "Version ${VERSION}."
+git push upstream ${VERSION}
 
 # publish
 case "$PUBLISH" in
-    "")
 	opam config exec --switch=publish -- opam publish prepare ${NAME}.${VERSION} ${ARCHIVE}
 	opam config exec --switch=publish -- OPAMPUBLISHBYPASSCHECKS=1 OPAMYES=1 opam publish submit ${NAME}.${VERSION}
 	;;
