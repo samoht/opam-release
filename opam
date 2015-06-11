@@ -1,4 +1,6 @@
 opam-version: "1.2"
+name:         "opam-release"
+version:      "0.1.0"
 maintainer:   "thomas@gazagnaire.org"
 authors:      "Thomas Gazagnaire"
 license:      "ISC"
