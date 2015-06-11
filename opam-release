@@ -51,13 +51,13 @@ case "$xDEV_REPO" in
 esac
 
 # release:
-echo git tag -a ${VERSION} -m "Version ${VERSION}."
-echo git push upstream ${VERSION}
+git tag -a ${VERSION} -m "Version ${VERSION}."
+git push upstream ${VERSION}
 
 # publish
 case "x$PUBLISH" in
     x)
-	echo opam config exec --switch=publish -- opam publish prepare ${NAME}.${VERSION} ${ARCHIVE}
-	echo opam config exec --switch=publish -- OPAMPUBLISHBYPASSCHECKS=1 OPAMYES=1 opam publish submit ${NAME}.${VERSION}
+	opam config exec --switch=publish -- opam publish prepare ${NAME}.${VERSION} ${ARCHIVE}
+	opam config exec --switch=publish -- OPAMPUBLISHBYPASSCHECKS=1 OPAMYES=1 opam publish submit ${NAME}.${VERSION}
 	;;
 esac
