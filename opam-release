@@ -3,11 +3,9 @@
 OASIS_VERSION=`grep 'Version:' _oasis 2>/dev/null | sed 's/Version: *//'`
 OASIS_NAME=`grep 'Name:' _oasis 2>/dev/null | sed 's/Name: *//'`
 
-OPAM_NAME=`grep '^name:' opam 2>/dev/null | sed 's/name: *//'`
-OPAM_VERSION=`grep '^version:' opam 2>/dev/null | sed 's/version: *//'`
-OPAM_DEV_REPO=`grep '^homepage:' opam 2>/dev/null | sed 's/homepage: *//'`
-
-ARCHIVE="$DEV_REPO/archive/${VERSION}.tar.gz"
+OPAM_NAME=`grep '^name:' opam 2>/dev/null | sed 's/name: *//' | xargs`
+OPAM_VERSION=`grep '^version:' opam 2>/dev/null | sed 's/version: *//' | xargs`
+OPAM_DEV_REPO=`grep '^homepage:' opam 2>/dev/null | sed 's/homepage: *//' | xargs`
 
 # NAME
 case "x$NAME" in
@@ -41,23 +39,25 @@ esac
 
 # DEV_REPO
 
-case "$xDEV_REPO" in
+case "x$DEV_REPO" in
     x)
 	case "$xOPAM_DEV_REPO" in
 	    x) echo "Unknown dev-repo. Please set DEV_REPO." exit 1 ;;
-	    *) DEV_REPO="$DEV_REPO"
+	    *) DEV_REPO="$OPAM_DEV_REPO"
 	esac
 	;;
 esac
 
+ARCHIVE="$DEV_REPO/archive/$VERSION.tar.gz"
+
 # release:
-git tag -a ${VERSION} -m "Version ${VERSION}."
-git push upstream ${VERSION}
+git tag -a $VERSION -m "Version $VERSION."
+git push upstream $VERSION
 
 # publish
 case "x$PUBLISH" in
     x)
-	opam config exec --switch=publish -- opam publish prepare ${NAME}.${VERSION} ${ARCHIVE}
-	opam config exec --switch=publish -- OPAMPUBLISHBYPASSCHECKS=1 OPAMYES=1 opam publish submit ${NAME}.${VERSION}
+	opam config exec --switch=publish -- opam publish prepare $NAME.$VERSION $ARCHIVE
+	opam config exec --switch=publish -- OPAMPUBLISHBYPASSCHECKS=1 OPAMYES=1 opam publish submit $NAME.$VERSION
 	;;
 esac
