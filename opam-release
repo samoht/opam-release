@@ -58,6 +58,6 @@ git push upstream $VERSION
 case "x$PUBLISH" in
     x)
 	opam config exec --switch=publish -- opam publish prepare $NAME.$VERSION $ARCHIVE
-	opam config exec --switch=publish -- OPAMPUBLISHBYPASSCHECKS=1 OPAMYES=1 opam publish submit $NAME.$VERSION
+	OPAMPUBLISHBYPASSCHECKS=1 OPAMYES=1 opam config exec --switch=publish -- opam publish submit $NAME.$VERSION
 	;;
 esac
