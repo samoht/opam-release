@@ -48,11 +48,11 @@ case "x$DEV_REPO" in
 	;;
 esac
 
-ARCHIVE="$DEV_REPO/archive/$VERSION.tar.gz"
+ARCHIVE="$DEV_REPO/archive/$TAG_PREFIX$VERSION.tar.gz"
 
 # release:
-git tag -a $VERSION -m "Version $VERSION."
-git push upstream $VERSION
+git tag -a $TAG_PREFIX$VERSION -m "Version $VERSION."
+git push upstream $TAG_PREFIX$VERSION
 
 # publish
 case "x$PUBLISH" in
